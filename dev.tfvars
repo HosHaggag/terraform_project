@@ -13,7 +13,7 @@ G2_private_subnet_cidr = "10.0.192.0/18"
 
 
 
-ami_id = "ami-0c55b159cbfafe1f0"
+ami_id = "ami-03a6eaae9938c858c"
 
 instance_type = "t2.micro"
 

@@ -30,7 +30,12 @@ variable "ami_id" {
   
 }
 
-variable "region" {
+variable "instance_type" {
+    type = string
+  
+}
+
+variable "aws_region" {
     type = string
   
 }

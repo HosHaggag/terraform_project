@@ -9,6 +9,7 @@ resource "aws_instance" "G1-public" {
    provisioner "file" {
   source      = "id_rsa"
   destination = "/home/ec2-user/.ssh/id_rsa"
+  
   connection {
     type     = "ssh"
     user     = "ec2-user"
@@ -16,15 +17,26 @@ resource "aws_instance" "G1-public" {
     host     = self.public_ip
   }
 }
+
+
   tags = {
     Name = "G1-public"
   }
 }
 
+resource "null_resource" "print_ip" {
 
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.G1-public.public_ip} > inventory"
+    
+  }
+  
+}
+
+# ami           = "ami-03a6eaae9938c858c"
 
 resource "aws_instance" "G1-private" {
-  ami           = "ami-03a6eaae9938c858c"
+  ami           = var.ami_id
   instance_type = "t2.micro"
   subnet_id = module.network.private-G1.id
   security_groups = [aws_security_group.allow_ssh_3k.id]
