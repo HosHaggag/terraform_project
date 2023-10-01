@@ -17,6 +17,6 @@ ami_id = "ami-03a6eaae9938c858c"
 
 instance_type = "t2.micro"
 
-aws_region = "us-east-1"
+aws_region = "eu-central-1"
 
-aws_az = ["us-east-1a", "us-east-1b", "us-east-1c"]
+aws_az = [ "eu-central-1a", "eu-central-1b"]

@@ -1,4 +1,5 @@
 
+
 resource "aws_route_table" "public_router" {
   vpc_id = aws_vpc.main_vpc.id
 
@@ -46,7 +47,3 @@ resource "aws_route_table_association" "G4" {
   subnet_id      = aws_subnet.private-G2.id
   route_table_id = aws_route_table.private_router.id
 }
-  
-
-
-

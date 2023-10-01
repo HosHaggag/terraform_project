@@ -1,3 +1,4 @@
+
 resource "aws_nat_gateway" "ng" {
   subnet_id         = aws_subnet.public-G1.id
   allocation_id     = aws_eip.eip_ng.id
