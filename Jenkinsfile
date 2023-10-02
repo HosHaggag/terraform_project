@@ -1,39 +1,49 @@
 pipeline {
+
     agent any
+
     parameters {
-        choice(name: 'server', choices: ["dev", "prod"], description: 'Select environment')
+        choice(name: 'workspace', choices: ["dev", "prod"], description: 'Select environment')
     }
+
     stages {
-        stage('Terraform Init') {
+
+        stage('Clone') {
             steps {
-                sh 'terraform init'
+                git (url: 'https://github.com/HosHaggag/terraform_project.git' , branch: 'main')
             }
         }
-        stage('Terraform Plan and select workspace') {
+        stage('Choose workspace') {
             steps {
-                script {
-                    def env = params.server
-                    
-
-                    // check if workspace exists
-                    if ( sh "terraform workspace list | grep -q ${env} " ) {
-                        sh "terraform workspace new ${env} || true"
-                    } 
-                        sh "terraform workspace select ${env} "
-                    
-
-                    sh "terraform plan -var-file=${env}.tfvars"
-                }
+                    env = "${params.workspace}"
+                    echo 'Choosing workspace....'
+                    sh 'terraform init '
+                    sh "terraform workspace new ${env} || true" 
+                    sh "terraform workspace select ${env} "
+                                    
             }
         }
 
-        stage('Terraform Apply') {
+        stage('plan') {
             steps {
-                script {
-                    def env = params.server
-                    sh "terraform apply -var-file=${env}.tfvars -auto-approve"
-                }
+                       env = "${params.workspace}"
+                       if (env == 'dev') {
+                        tfVarsFile = 'dev.tfvars'
+                        sh 'terraform workspace new Dev || true' 
+                        sh 'terraform workspace select Dev '
+                    } else if (env == 'prod') {
+                        tfVarsFile = 'prod.tfvars'
+                        sh 'terraform workspace new prod || true' 
+                        sh 'terraform workspace select prod '
+                    }
             }
         }
+        // stage('Build and apply') {
+        //     steps {
+        //             echo 'Building and applying....'
+        //             sh 'terraform plan --var-file=dev.tfvars'
+        //             sh 'terraform apply --var-file=dev.tfvars -auto-approve'
+        //     }
+        // }
     }
 }
