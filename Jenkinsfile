@@ -28,6 +28,7 @@ pipeline {
         }
         stage(' apply') {
             steps {
+                script {
                     echo ' applying....'
                     if (params.operation == 'destroy') {
                         sh "terraform destroy --var-file=${params.workspace}.tfvars -auto-approve"
@@ -35,6 +36,7 @@ pipeline {
                     }
                     sh "terraform plan --var-file=${params.workspace}.tfvars"
                     sh "terraform apply --var-file=${params.workspace}.tfvars -auto-approve"
+                }
             }
         }
     }
