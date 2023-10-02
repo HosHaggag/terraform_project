@@ -13,7 +13,7 @@ pipeline {
             steps {
                 dir('terraform_project') {
                     echo 'Choosing workspace....'
-                    sh 'terraform workspace select dev'
+                    sh 'terraform workspace list'
                 }
             }
         }
