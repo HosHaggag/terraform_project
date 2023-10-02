@@ -15,12 +15,13 @@ pipeline {
         }
         stage('Choose workspace') {
             steps {
+                script {
                 env = "${params.workspace}"
                 echo 'Choosing workspace....'
                 sh 'terraform init '
                 sh "terraform workspace new ${env} || true" 
                 sh "terraform workspace select ${env} "
-                                    
+                }            
             }
         }
 
