@@ -27,6 +27,7 @@ pipeline {
 
         stage('plan') {
             steps {
+                script {
                        env = "${params.workspace}"
                        if (env == 'dev') {
                         tfVarsFile = 'dev.tfvars'
@@ -37,6 +38,7 @@ pipeline {
                         sh 'terraform workspace new prod || true' 
                         sh 'terraform workspace select prod '
                     }
+                }
             }
         }
         // stage('Build and apply') {
