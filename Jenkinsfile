@@ -11,23 +11,18 @@ pipeline {
         }
         stage('Choose workspace') {
             steps {
-                sh 'ls -la'
-                dir('terraform_project') {
-                    sh 'ls -la'
                     echo 'Choosing workspace....'
                     sh 'terraform init'
-                    sh 'terraform workspace list'
-                }
+                    sh 'terraform workspace select dev'
+                
             }
         }
         stage('Build and apply') {
             steps {
-                dir('terraform_project') {
                     echo 'Building and applying....'
                     sh 'terraform init'
                     sh 'terraform plan --var-file=dev.tfvars'
                     sh 'terraform apply --var-file=dev.tfvars -auto-approve'
-                }
             }
         }
     }
