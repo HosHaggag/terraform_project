@@ -3,6 +3,7 @@ pipeline {
     agent any
 
     parameters {
+        choice(name: 'operation', choices: ["build", "destroy"], description: 'Select operation')
         choice(name: 'workspace', choices: ["dev", "prod"], description: 'Select environment')
     }
 
@@ -25,9 +26,13 @@ pipeline {
                 }
             }
         }
-        stage('plan and apply') {
+        stage(' apply') {
             steps {
-                    echo 'Building and applying....'
+                    echo ' applying....'
+                    if (params.operation == 'destroy') {
+                        sh "terraform destroy --var-file=${params.workspace}.tfvars -auto-approve"
+                        return
+                    }
                     sh "terraform plan --var-file=${params.workspace}.tfvars"
                     sh "terraform apply --var-file=${params.workspace}.tfvars -auto-approve"
             }
