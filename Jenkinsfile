@@ -7,46 +7,30 @@ pipeline {
     }
 
     stages {
-
-        stage('Clone') {
-            steps {
-                git (url: 'https://github.com/HosHaggag/terraform_project.git' , branch: 'main')
-            }
-        }
         stage('Choose workspace') {
             steps {
-                script {
-                env = "${params.workspace}"
+              script {
                 echo 'Choosing workspace....'
                 sh 'terraform init '
-                sh "terraform workspace new ${env} || true" 
-                sh "terraform workspace select ${env} "
-                }            
+                sh "terraform workspace new ${params.workspace} || true" 
+                sh "terraform workspace select ${params.workspace} "
+              }            
             }
         }
 
         stage('plan') {
             steps {
                 script {
-                       env = "${params.workspace}"
-                       if (env == 'dev') {
-                        tfVarsFile = 'dev.tfvars'
-                        sh 'terraform workspace new Dev || true' 
-                        sh 'terraform workspace select Dev '
-                    } else if (env == 'prod') {
-                        tfVarsFile = 'prod.tfvars'
-                        sh 'terraform workspace new prod || true' 
-                        sh 'terraform workspace select prod '
-                    }
+                       sh "terraform plan --var-file=${params.workspace}.tfvars"
                 }
             }
         }
-        // stage('Build and apply') {
-        //     steps {
-        //             echo 'Building and applying....'
-        //             sh 'terraform plan --var-file=dev.tfvars'
-        //             sh 'terraform apply --var-file=dev.tfvars -auto-approve'
-        //     }
-        // }
+        stage('plan and apply') {
+            steps {
+                    echo 'Building and applying....'
+                    sh "terraform plan --var-file=${params.workspace}.tfvars"
+                    sh "terraform apply --var-file=${params.workspace}.tfvars -auto-approve"
+            }
+        }
     }
 }
