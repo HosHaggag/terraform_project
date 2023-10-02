@@ -12,7 +12,7 @@ pipeline {
         stage('Choose workspace') {
             steps {
                     echo 'Choosing workspace....'
-                    sh 'terraform init'
+                    sh 'terraform init  -reconfigure'
                     sh 'terraform workspace select dev'
                 
             }
