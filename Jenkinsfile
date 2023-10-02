@@ -11,7 +11,9 @@ pipeline {
         }
         stage('Choose workspace') {
             steps {
+                sh 'ls -la'
                 dir('terraform_project') {
+                    sh 'ls -la'
                     echo 'Choosing workspace....'
                     sh 'terraform init'
                     sh 'terraform workspace list'
